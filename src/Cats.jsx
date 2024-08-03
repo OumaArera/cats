@@ -43,6 +43,7 @@ const catImages = [
 const Cats = () => {
   const [catFact, setCatFact] = useState('');
   const [catImage, setCatImage] = useState('');
+  const [timer, setTimer] = useState(20);
 
   const getRandomCatImage = () => {
     const randomIndex = Math.floor(Math.random() * catImages.length);
@@ -53,10 +54,12 @@ const Cats = () => {
     try {
       // Fetch the cat fact
       const factResponse = await axios.get('https://catfact.ninja/fact');
-      setCatFact(factResponse.data.fact);
-
       // Set a new random cat image
-      setCatImage(getRandomCatImage());
+      const newCatImage = getRandomCatImage();
+
+      // Update state after both actions are completed
+      setCatFact(factResponse.data.fact);
+      setCatImage(newCatImage);
     } catch (error) {
       console.error('Error fetching cat data:', error);
     }
@@ -65,12 +68,21 @@ const Cats = () => {
   useEffect(() => {
     fetchCatData();
 
-    // Update the cat fact and image every 30 seconds
+    // Set an interval to update the cat fact and image every 20 seconds
     const intervalId = setInterval(() => {
       fetchCatData();
+      setTimer(20);
     }, 20000); // 20 seconds
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    // Set an interval to update the timer every second
+    const countdownIntervalId = setInterval(() => {
+      setTimer(prevTimer => prevTimer > 0 ? prevTimer - 1 : 20);
+    }, 1000); // 1 second
+
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(countdownIntervalId);
+    }; // Cleanup intervals on component unmount
   }, []);
 
   return (
@@ -80,6 +92,9 @@ const Cats = () => {
         {catImage && <img src={catImage} alt="Random Cat" className="rounded-lg shadow-md mb-4" />}
         <div className="bg-white bg-opacity-75 rounded-lg p-4">
           {catFact && <p className="text-lg text-gray-700 mb-4 font-semibold italic">{catFact}</p>}
+        </div>
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">Next update in: <span className="font-bold">{timer}</span> seconds</p>
         </div>
       </div>
     </div>
