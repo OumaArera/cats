@@ -68,18 +68,18 @@ const Cats = () => {
     // Update the cat fact and image every 30 seconds
     const intervalId = setInterval(() => {
       fetchCatData();
-    }, 20000); // 30 seconds
+    }, 20000); // 20 seconds
 
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Cat Fact of the Day</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Cat Fact of the Day</h1>
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6 relative">
         {catImage && <img src={catImage} alt="Random Cat" className="rounded-lg shadow-md mb-4" />}
         <div className="bg-white bg-opacity-75 rounded-lg p-4">
-          {catFact && <p className="text-lg text-gray-700 mb-4">{catFact}</p>}
+          {catFact && <p className="text-lg text-gray-700 mb-4 font-semibold italic">{catFact}</p>}
         </div>
       </div>
     </div>
