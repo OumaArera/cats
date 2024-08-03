@@ -68,7 +68,7 @@ const Cats = () => {
     // Update the cat fact and image every 30 seconds
     const intervalId = setInterval(() => {
       fetchCatData();
-    }, 30000); // 30 seconds
+    }, 20000); // 30 seconds
 
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
