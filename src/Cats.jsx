@@ -34,7 +34,6 @@ import cat28 from "./images/cat28.jpeg";
 import cat29 from "./images/cat29.jpeg";
 import cat30 from "./images/cat30.jpeg";
 
-
 const catImages = [
   cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10,
   cat11, cat12, cat13, cat14, cat15, cat16, cat17, cat18, cat19, cat20,
@@ -50,26 +49,26 @@ const Cats = () => {
     return catImages[randomIndex];
   };
 
+  const fetchCatData = async () => {
+    try {
+      // Fetch the cat fact
+      const factResponse = await axios.get('https://catfact.ninja/fact');
+      setCatFact(factResponse.data.fact);
+
+      // Set a new random cat image
+      setCatImage(getRandomCatImage());
+    } catch (error) {
+      console.error('Error fetching cat data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCatData = async () => {
-      try {
-        // Fetch the cat fact
-        const factResponse = await axios.get('https://catfact.ninja/fact');
-        setCatFact(factResponse.data.fact);
-
-        // Set the initial random cat image
-        setCatImage(getRandomCatImage());
-      } catch (error) {
-        console.error('Error fetching cat data:', error);
-      }
-    };
-
     fetchCatData();
 
-    // Update the cat image every 20 seconds
+    // Update the cat fact and image every 30 seconds
     const intervalId = setInterval(() => {
-      setCatImage(getRandomCatImage());
-    }, 20000); // 20 seconds
+      fetchCatData();
+    }, 30000); // 30 seconds
 
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
